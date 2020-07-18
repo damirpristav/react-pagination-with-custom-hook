@@ -2,4 +2,4 @@
 
 [Live Preview](https://apps.damirpristav.com/react-pagination)
 
-<!-- [Blog Post]() -->
+[Blog Post](https://codingfromscratch.dev/reactjs-pagination-using-custom-hook/)
