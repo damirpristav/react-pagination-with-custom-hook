@@ -53,7 +53,7 @@ const Countries = ({ data, itemsPerPage, startFrom, searchByData }) => {
         <button type="submit"className="button is-link">Search</button>
       </form>
       {searchFor && <h2 className="mb-6 has-text-centered is-size-2">Search results for: "{searchFor}"</h2>}
-      <Fragment>
+      {slicedData.length > 0 ? <Fragment>
         <table className="table is-fullwidth is-striped">
           <thead>
             <tr>
@@ -98,6 +98,11 @@ const Countries = ({ data, itemsPerPage, startFrom, searchByData }) => {
           </ul>
         </nav>
       </Fragment>
+      :
+      <div className="message is-link">
+        <div className="message-body has-text-centered">No results</div>
+      </div>
+    }
     </div>
   );
 }
