@@ -1,3 +1,18 @@
 .wrapper {
   margin-bottom: 100px;
 }
+
+.table tr th {
+  cursor: pointer;
+}
+
+.table tr th:nth-child(1),
+.table tr th:nth-child(2) {
+  width: 32%;
+}
+
+.table tr th:nth-child(3),
+.table tr th:nth-child(4),
+.table tr th:nth-child(5) {
+  width: 12%;
+}

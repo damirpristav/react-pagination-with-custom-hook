@@ -6,7 +6,16 @@ const Countries = ({ data, itemsPerPage, startFrom, searchByData }) => {
   const [search, setSearch] = useState('');
   const [searchBy, setSearchBy] = useState(searchByData && searchByData.length > 0 ? searchByData[0].value : '');
   const [searchFor, setSearchFor] = useState('');
-  const { slicedData, pagination, prevPage, nextPage, changePage, setFilteredData, setSearching } = usePagination({ itemsPerPage, data, startFrom });
+  const [sortByKey, setSortByKey] = useState('name');
+  const [order, setOrder] = useState('asc');
+  const columns = [
+    { label: 'Country', sortKey: 'name' },
+    { label: 'Capital', sortKey: 'capital' },
+    { label: 'Code', sortKey: 'iso2' },
+    { label: 'Currency', sortKey: 'currency' },
+    { label: 'Phone Code', sortKey: 'phone_code' }
+  ];
+  const { slicedData, pagination, prevPage, nextPage, changePage, setFilteredData, setSearching, filteredData } = usePagination({ itemsPerPage, data, startFrom });
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -20,11 +29,50 @@ const Countries = ({ data, itemsPerPage, startFrom, searchByData }) => {
         }
         return country[searchKey].toLowerCase().includes(search.trim().toLowerCase());
       });
-      setFilteredData(filtered);
+      const copyOfFilteredData = [...filtered];
+      const sortFiltered = sortData(copyOfFilteredData, sortByKey, order);
+      setFilteredData(sortFiltered);
     }else {
-      setFilteredData(data);
+      const sortFiltered = sortData(data, sortByKey, order);
+      setFilteredData(sortFiltered);
     }
     setSearchFor(search);
+  }
+
+  const sortHandler = (sortBy, orderBy) => {
+    if(sortByKey !== sortBy) {
+      setSortByKey(sortBy);
+    }
+    if(order !== orderBy) {
+      setOrder(orderBy);
+    }
+
+    const copyOfFilteredData = [...filteredData];
+    const filtered = sortData(copyOfFilteredData, sortBy, orderBy);
+    setFilteredData(filtered);
+  }
+
+  const sortData = (dataToSort, sortBy, orderBy) => {
+    const filtered = dataToSort.sort((a, b) => {
+      if(orderBy === 'asc') {
+        if(a[sortBy] < b[sortBy]) {
+          return -1;
+        }else if(a[sortBy] > b[sortBy]) {
+          return 1;
+        }else {
+          return 0;
+        }
+      }else {
+        if(b[sortBy] < a[sortBy]) {
+          return -1;
+        }else if(b[sortBy] > a[sortBy]) {
+          return 1;
+        }else {
+          return 0;
+        }
+      }
+    });
+    return filtered;
   }
 
   return(
@@ -57,11 +105,22 @@ const Countries = ({ data, itemsPerPage, startFrom, searchByData }) => {
         <table className="table is-fullwidth is-striped">
           <thead>
             <tr>
-              <th>Country</th>
-              <th>Capital</th>
-              <th>Code</th>
-              <th>Currency</th>
-              <th>Phone Code</th>
+              {columns.map((col, index) => (
+                <th 
+                  key={index}
+                  onClick={() => sortHandler(col.sortKey, sortByKey === col.sortKey ? order === 'asc' ? 'desc' : 'asc' : 'asc')}
+                >
+                  {col.label}
+                  {sortByKey === col.sortKey &&
+                    <span className="icon">
+                      {order === 'asc'
+                        ? <i className="fas fa-sort-up"></i>
+                        : <i className="fas fa-sort-down"></i>
+                      }
+                    </span>
+                  }
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>

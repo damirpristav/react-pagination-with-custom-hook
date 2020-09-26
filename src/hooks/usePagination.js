@@ -72,6 +72,7 @@ const usePagination = (initialState) => {
   return {
     slicedData,
     pagination,
+    filteredData,
     prevPage: goToPrevPage,
     nextPage: goToNextPage,
     changePage,
